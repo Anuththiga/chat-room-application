@@ -61,7 +61,7 @@ class UserController extends Controller
         {
             return view('dashboard');
         }
-        return redirect('login')->with('success', 'You are not allowed to access');
+        return redirect('login')->with('success', 'You are not allowed to access...');
     }
 
     function logout()
@@ -72,5 +72,17 @@ class UserController extends Controller
         return redirect('login');
     }
 
+    function profile()
+    {
+        if(Auth::check())
+        {
+            $data = User::where('id', Auth::id())->get();
+            return view('profile', compact('data'));
+        }
+
+        return redirect('login')->with('message', 'You are not allowed to access...');
+    }
+
+    
     
 }

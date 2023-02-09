@@ -25,5 +25,7 @@ Route::controller(UserController::class)->group(function(){
     Route::post('validate_registration', 'validate_registration')->name('user.validate_registration');
     Route::post('validate_login', 'validate_login')->name('user.validate_login');
     Route::get('dashboard', 'dashboard')->name('dashboard');
+    Route::get('profile', 'profile')->name('profile');
+    Route::post('profile_validation', 'profile_validation')->name('user.profile_validation');
 
 });

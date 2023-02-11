@@ -29,9 +29,9 @@
                     @else
                     <li class="nav-item">
                         @if(Auth::user()->user_image != '')
-                        <a class="nav-link" href="#"><b>Welcome <img class="rounded-circle" src="{{ asset('images/'.Auth::user()->user_image) }}"/> &nbsp; {{Auth::user()->name}}</b></a>
+                        <a class="nav-link" href="#"><b>Welcome <img class="rounded-circle" width="35" src="{{ asset('images/'.Auth::user()->user_image) }}"/> &nbsp; {{Auth::user()->name}}</b></a>
                         @else
-                        <a class="nav-link" href="#"><b>Welcome <img class="rounded-circle" src="{{ asset('images/no-image.png') }}"/>&nbsp; {{Auth::user()->name}}</b></a>
+                        <a class="nav-link" href="#"><b>Welcome <img class="rounded-circle" width="35" src="{{ asset('images/no-image.png') }}"/>&nbsp; {{Auth::user()->name}}</b></a>
                         @endif
                     </li>
                     <li class="nav-item">

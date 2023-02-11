@@ -91,13 +91,25 @@ class UserController extends Controller
             'user_image'    => 'image|mimes:jpg,png,jpeg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
 
         ]);
-        $user_image = $request->$hidden_user_image;
+        $user_image = $request->hidden_user_image;
 
         if($request->user_image != '')
         {
             $user_image = time(). '.' . $request->user_image->getClientOriginalExtension();
             $request->user_image->move(public_path('images'), $user_image);
         }
+
+        $user = User::find(Auth::id());
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if($request->password != '')
+        {
+            $user->password = Hash::make($request->password);
+        }
+        $user->user_image = $user_image;
+        $user->save();
+
+        return redirect('profile')->with('success', 'Profile Details Updated Successfully...');
     }
     
 }

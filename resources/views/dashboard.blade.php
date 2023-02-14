@@ -10,3 +10,17 @@
 </div>
 
 @endsection
+
+<script>
+
+var conn = new WebSocket('ws://127.0.0.1:8090/');
+conn.onopen = function(e){
+    console.log("Connection establised!");
+
+};
+
+conn.onmessage = function(e){
+
+};
+
+</script>

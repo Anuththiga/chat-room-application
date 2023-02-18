@@ -39,7 +39,46 @@ class SocketController extends Controller implements MessageComponentInterface
     //onMessage will be called when message has been sent
     public function onMessage(ConnectionInterface $conn, $msg)
     {
+        $data = json_decode($msg);
+        
+        if(isset($data->type))
+        {
+            if($data->type == 'request_load_unconnected_user')
+            {
+                $user_data = User::select('id', 'name', 'user_status', 'user_image')
+                                    ->where('id', '!=', $data->from_user_id)
+                                    ->orderBy('name', 'ASC')
+                                    ->get();
+                                
+                $sub_data = array();
 
+                foreach($user_data as $row)
+                {
+                    $sub_data[] = array(
+                        'name'      =>  $row['name'],
+                        'id'        =>  $row['id'],
+                        'status'    =>  $row['user_status'],
+                        'user_image'=>  $row['user_image']
+                    );
+                }
+
+                $sender_connection_id = User::select('connection_id')->where('id', $data->from_user_id)
+                                                ->get();
+
+                $send_data['data'] = $sub_data;
+
+                $send_data['response_load_unconnected_user'] = true;
+
+                foreach($this->clients as $client)
+                {
+                    if($client->resourceId == $sender_connection_id[0]->connection_id)
+                    {
+                        $client->send(json_encode($send_data));
+                    }
+                }
+
+            }
+        }
     }
 
     //onClose will be called when web socket connection has been closed

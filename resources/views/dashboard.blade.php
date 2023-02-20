@@ -27,7 +27,8 @@
     <div class="col-md-3">
         <div class="card" style="height: 255px; overflow-y: scroll;">
             <div class="card-header">
-
+                <input type="text" placeholder="Search User..." autocomplete="off" 
+                onkeyup="search_user('{{ Auth::id() }}', this.value);"/>
             </div>
             <div class="card-body">
                 <div id="search_people_area" class="mt-3"></div>
@@ -66,7 +67,7 @@ conn.onopen = function(e){
 conn.onmessage = function(e){
     var data = JSON.parse(e.data);
 
-    if(data.response_load_unconnected_user)
+    if(data.response_load_unconnected_user || data.response_search_user)
     {
         var html = '';
 
@@ -88,7 +89,6 @@ conn.onmessage = function(e){
                     width="40" class="rounded-circle" />`;
                 }
                
-                console.log(data.data[count].name);
                 html += `
                 <li class="list-group-item">
                     <div class="row">
@@ -121,6 +121,24 @@ function load_unconnected_user(from_user_id)
     };
 
     conn.send(JSON.stringify(data));
+}
+
+function search_user(from_user_id, search_query)
+{
+    if(search_query.length > 0)
+    {
+        var data = {
+            from_user_id : from_user_id,
+            search_query : search_query,
+            type : 'request_search_user'
+        };
+
+        conn.send(JSON.stringify(data));
+    }
+    else
+    {
+        load_unconnected_user(from_user_id);
+    }
 }
 
 </script>

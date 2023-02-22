@@ -27,7 +27,7 @@
     <div class="col-md-3">
         <div class="card" style="height: 255px; overflow-y: scroll;">
             <div class="card-header">
-                <input type="text" placeholder="Search User..." autocomplete="off" 
+                <input type="text" placeholder="Search User..." id="search_people" autocomplete="off" 
                 onkeyup="search_user('{{ Auth::id() }}', this.value);"/>
             </div>
             <div class="card-body">
@@ -95,7 +95,7 @@ conn.onmessage = function(e){
                         <div class="col col-9">`+user_image+`&nbsp;`+data.data[count].name+`</div>
                         <div class="col col-3">
                             <button type="button" name="send_request" class="btn 
-                                btn-primary btn-sm float-end"><i class="fas fa-paper-plane"></i></button>    
+                                btn-primary btn-sm float-end" onClick="send_request(this, `+from_user_id+`, `+data.data[count].id+`)"><i class="fas fa-paper-plane"></i></button>    
                         </div>
                     </div>
                 </li>
@@ -106,10 +106,16 @@ conn.onmessage = function(e){
         }
         else
         {
-            html = 'No User Foune'
+            html = 'No User Found'
         }
 
         document.getElementById('search_people_area').innerHTML = html;
+    }
+
+    if(data.response_from_user_chat_request)
+    {
+        //to show the remaining user
+        search_user(from_user_id, document.getElementById('search_people').value);
     }
 };
 
@@ -141,4 +147,17 @@ function search_user(from_user_id, search_query)
     }
 }
 
+
+function send_request(element, from_user_id, to_user_id)
+{
+    var data = {
+        from_user_id : from_user_id,
+        to_user_id : to_user_id,
+        type : 'request_chat_user'
+    };
+
+    element.disabled = true;
+
+    conn.send(JSON.stringify(data));
+}
 </script>

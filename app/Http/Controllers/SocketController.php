@@ -156,6 +156,18 @@ class SocketController extends Controller implements MessageComponentInterface
                 }
 
             }
+
+            if($data->type == 'request_load_unread_notification')
+            {
+                $notification_data = Chat_request::select('id', 'from_user_id', 'to_user_id', 'status')
+                                                    ->where('status', '!=', 'Approve')
+                                                    ->where(function($query) use ($data){
+                                                        $query->where('from_user_id', $data->user_id)
+                                                              ->orWhere('to_user_id', $data->user_id);
+                                                    })->orderBy('id', 'ASC')->get();
+
+                                        
+            }
         }
     }
 

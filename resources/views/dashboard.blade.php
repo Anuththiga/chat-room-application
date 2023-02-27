@@ -39,7 +39,7 @@
         <div class="card" style="height: 255px; overflow-y: scroll;">
             <div class="card-header"><b>Notification</b></div>
             <div class="card-body">
-                <ul class="list-group">
+                <ul class="list-group" id="notification_area">
 
                 </ul>
 
@@ -160,4 +160,15 @@ function send_request(element, from_user_id, to_user_id)
 
     conn.send(JSON.stringify(data));
 }
+
+function load_unread_notification(user_id)
+{
+    var data = {
+        user_id : user_id,
+        type : 'request_load_unread_notification'
+    };
+
+    conn.send(JSON.stringify(data));
+}
+
 </script>

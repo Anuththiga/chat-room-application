@@ -62,6 +62,8 @@ conn.onopen = function(e){
     console.log("Connection establised!");
     load_unconnected_user(from_user_id);
 
+    load_unread_notification(from_user_id);
+
 };
 
 conn.onmessage = function(e){
@@ -117,6 +119,25 @@ conn.onmessage = function(e){
         //to show the remaining user
         search_user(from_user_id, document.getElementById('search_people').value);
     }
+
+    if(data.response_load_notification)
+    {
+        var html = '';
+
+        for(var count=0; count<data.data.length; count++)
+        {
+            var user_image = '';
+
+            if(data.data[count].user_image != '')
+            {
+                user_image = `<img src ="{{ asset('images/') }}/`+data.data[count].user_image +`"
+                                width="40" class="rounded-circle" />`;
+            }
+        }
+
+        document.getElementById('notification_area').innerHTML = html;
+    }
+    
 };
 
 function load_unconnected_user(from_user_id)

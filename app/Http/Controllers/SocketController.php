@@ -145,12 +145,23 @@ class SocketController extends Controller implements MessageComponentInterface
 
                 $sender_connection_id = User::select('connection_id')->where('id', $data->from_user_id)->get();
 
+                $receiver_connection_id = User::select('connection_id')->where('id', $data->to_user_id)->get();
+
                 foreach($this->clients as $client)
                 {
                     if($client->resourceId == $sender_connection_id[0]->connection_id)
                     {
                         $send_data['response_from_user_chat_request'] = true;
                         
+                        $client->send(json_encode($send_data));
+                    }
+
+                    if($client->resourceId == $receiver_connection_id[0]->connection_id)
+                    {
+                        $send_data['user_id'] = $data->to_user_id;
+
+                        $send_data['response_to_user_chat_request'] = true;
+
                         $client->send(json_encode($send_data));
                     }
                 }

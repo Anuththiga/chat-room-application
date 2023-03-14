@@ -64,6 +64,8 @@ conn.onopen = function(e){
 
     load_unread_notification(from_user_id);
 
+    load_unread_notification(from_user_id);
+
 };
 
 conn.onmessage = function(e){
@@ -118,6 +120,13 @@ conn.onmessage = function(e){
     {
         //to show the remaining user
         search_user(from_user_id, document.getElementById('search_people').value);
+
+        load_unread_notification(from_user_id);
+    }
+
+    if(data.response_to_user_chat_request)
+    {
+        load_unread_notification(data.user_id);
     }
 
     if(data.response_load_notification)
@@ -133,6 +142,46 @@ conn.onmessage = function(e){
                 user_image = `<img src ="{{ asset('images/') }}/`+data.data[count].user_image +`"
                                 width="40" class="rounded-circle" />`;
             }
+            else
+            {
+                user_image = `<img src="{{ asset('images/no-image.jpg') }}" 
+                width="40" class="rounded-circle" />`;
+            }
+
+            html += `
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col col-8">`+user_image+ `&nbsp;`+data.data[count].name+`</div>
+                    <div class="col col-4">
+                        `;
+            if(data.data[count].notification_type == 'Send Request')
+            {
+                if(data.data[count].status == 'Pending')
+                {
+                    html += '<button type="button" name="send_request" class="btn btn-warning btn-sm float-end">Request Send</button> ';
+                }
+                else
+                {
+                    html += '<button type="button" name="send_request" class="btn btn-danger btn-sm float-end">Request Rejected</button>';
+                }
+            }
+            else
+            {
+                if(data.data[count].status == 'Pending')
+                {
+                    html += '<button type="button" class="btn btn-danger btn-sm float-end"><li class="fas fa-times"></i></button>&nbsp;';
+                    html += '<button type="button" class="btn btn-success btn-sm float-end"><li class="fas fa-check"></i></button>';
+                }
+                else
+                {
+                    html += '<button type="button" name="send_request" class="btn btn-danger btn-sm float-end">Request Rejected</button>';
+                }
+            }
+
+            html += `</div>
+                </div>
+            </li>
+            `;
         }
 
         document.getElementById('notification_area').innerHTML = html;
